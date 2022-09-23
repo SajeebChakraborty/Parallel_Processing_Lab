@@ -1,0 +1,3 @@
+Output of Forbidden latency: 1 2 5 
+Output of Permissible latency: 3 4 6 
+Output of Collision Vector: 1 0 0 1 1 
