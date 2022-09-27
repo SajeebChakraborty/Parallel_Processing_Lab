@@ -81,6 +81,43 @@ int main(){
 
     cout<<endl;
 
+    //collision point
+
+    int latency;
+
+    latency=2;
+
+    for(int i=1;i<=m;i++)
+    {
+
+        for(int j=1;j<=n;j++)
+        {
+
+            if(reservation_table[i][j]==1)
+            {
+
+                if(reservation_table[i][j+latency]==1)
+                {
+
+                     cout << "Collision point : " << i << "," << j << endl;
+
+                }
+
+
+
+
+            }
+
+
+
+
+        }
+
+
+
+    }
+
+
 /*1 0 0 0 0 1
 0 1 0 1 0 0
 0 0 1 0 0 0

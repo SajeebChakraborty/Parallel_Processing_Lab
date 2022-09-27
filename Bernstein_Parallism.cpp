@@ -12,7 +12,7 @@ int main(){
     cin>>n;
     string out[n];
     int len[n];
-    string in[n][10],str,depen_flow[7][15],depen_anti[7][15],depen_output[7][15];
+    string in[n][10],str,depen_flow[n][15],depen_anti[n][15],depen_output[n][15];
 
     for(i=0;i<n;i++){
         cout<<"Program order: ";
