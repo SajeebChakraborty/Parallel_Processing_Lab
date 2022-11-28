@@ -1,116 +1,88 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-int depen[7][15],len2[15];
+int main()
+{
+    int n;
 
-int main(){
+    cout << "Number of process: ";
+    cin >> n;
+    cout << n << endl;
 
-    int i,j,k,l,n,r,t;
+    string instruction;
+    string input_set[n][10];
+    string output_set[n];
+    int input_len[n];
 
-    cout<<"Program Nmber: ";
-    cin>>n;
-    string out[n];
-    int len[n];
-    string in[n][10],str,depen_flow[n][15],depen_anti[n][15],depen_output[n][15];
+    string dependency[15];
 
-    for(i=0;i<n;i++){
-        cout<<"Program order: ";
-        cin>>str;
-        l=str.size();
-        out[i]=str[3];
-        k=0;
-        for(j=5;j<l;j=j+2){
-           in[i][k]=str[j];
-           k++;
-        }
-        len[i]=k;
-    }
-
-    for(i=0;i<n;i++){
-
-        t=0;
-
-        for(j=i+1;j<n;j++){
-            int cnt=1;
-            if(out[i]==out[j]){
-                cnt=0;
-                depen_output[i+1][t]="Output Dependency";
-            }
-
-            for(k=0;k<len[i];k++){
-                if(in[i][k]==out[j]){
-                    cnt=0;
-                    depen_anti[i+1][t]="Anti Dependency";
-                }
-            }
-            for(r=0;r<len[j];r++){
-                if(in[j][r]==out[i]){
-                        cnt=0;
-                        depen_flow[i+1][t]="Flow Dependency";
-                }
-            }
-
-
-            if(cnt==1){
-                cout<<"P"<<i+1<<"||"<<"P"<<j+1<<endl;
-            }
-            else
-            {
-                 depen[i+1][t]=j+1;
-                 t++;
-                 len2[i+1]=t;
-
-            }
-
-        }
-
-    }
-    cout << "Dependency Graph" << endl;
-
-    for(int i=1;i<=n;i++)
+    for (int i = 0; i < n; i++)
     {
-        //cout << "P" << i << "-->";
+        cout << "Program order: ";
+        cin >> instruction;
+        cout << instruction << endl;
 
-        for(int j=0;j<len2[i];j++)
-        {
-
-            if(depen_flow[i][j]=="Flow Dependency")
-            {
-
-                cout << "P" << depen[i][j] <<  " " << depen_flow[i][j] << " on P" << i << endl;
-
+        // separate input set
+        int indx = 0;
+        for(int j=5; j<instruction.size(); j++) {
+            if((instruction[j] >= 'a' && instruction[j] <= 'z') || (instruction[j] >= 'A' && instruction[j] <= 'Z')) {
+                input_set[i][indx] = instruction[j];
+                indx++;
             }
-            if(depen_anti[i][j]=="Anti Dependency")
-            {
-
-                cout << "P" << depen[i][j] <<  " " << depen_anti[i][j] << " on P" << i << endl;
-
-            }
-            if(depen_output[i][j]=="Output Dependency")
-            {
-
-                cout << "P" << depen[i][j] <<  " " << depen_output[i][j] << " on P" << i << endl;
-
-            }
-
-
-
-
         }
-        cout << endl;
+        input_len[i] = indx;
 
-
+        // separate output set
+        output_set[i] = instruction[3];
     }
 
+    // check bernstein condition for parallism
+    int iteration = 0;
+    for (int i=0; i < n; i++)
+    {
+        for (int j=i+1; j < n; j++)
+        {
+            bool condition = true;
 
+            // check Output1 n Output2
+            if (output_set[i] == output_set[j]) {
+                condition = false;
+
+                dependency[iteration] = "P" + to_string(i+1) + " Output Dependent on P" + to_string(j+1);
+                iteration++;
+            }
+                
+            for(int k=0; k<input_len[i]; k++) {
+                // I1 == O2
+                if(input_set[i][k] == output_set[j]) {
+                    condition = false;
+
+                    dependency[iteration] = "P"+to_string(i+1) + " Anti dependent on " + "P" + to_string(j+1);
+                    iteration++;
+                }
+            }
+            for(int k=0; k<input_len[j]; k++) {
+                // O1 == I2
+                if(output_set[i] == input_set[j][k]) {
+                    condition = false;
+
+                    dependency[iteration] = "P"+to_string(i+1) + " Flow dependent on " + "P" + to_string(j+1);
+                    iteration++;
+                }
+            }
+
+            if (condition)
+            {
+                cout << "P" << i+1 << "||" << "P" << j+1 << endl;
+            }
+        }
+    }
+
+    cout << endl << "Dependency Graph" << endl;
+    for(int i=0; i<iteration; i++) {
+        cout << dependency[i] << endl;
+    }
 
     return 0;
-    /*P1:C=D*E
-      P2:M=G+C
-      P3:A=B+C
-      P4:C=L+M
-      P5:F=G/E */
-
 }
-
